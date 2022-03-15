@@ -7,8 +7,11 @@ class TowerOfHanoi {
 
 
   def printRules = {
-    println("My beautiful rules")
-    println("TO-DO")
+    println("There 3 rods and n disks. You specify n before game starts." +
+      "The more disks, the harder puzzle gets. At the beginning all disks are at left-side rod." +
+      "Your task is to transfer all of them to the right-side rod." +
+      "Disks are transferred between rods one at a time. " +
+      "At no time may a bigger disk be placed on top of a smaller one.")
   }
 
   def getInput: Int = {
