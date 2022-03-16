@@ -86,8 +86,6 @@ class TowerOfHanoi {
 
   def move(rods: Array[Stack[Int]] /*,rodOut: Int, rodIn: Int*/) = {
 
-    var quit = false
-
     def out(): Int = {
       var s = readLine("Take disks from rod number: ")
 
