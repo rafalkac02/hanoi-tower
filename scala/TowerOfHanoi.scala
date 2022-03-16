@@ -1,17 +1,18 @@
 import scala.collection.mutable.Stack
 import scala.io.StdIn.readLine
 import scala.math.{max, min, pow}
+import scala.sys.exit
 
 
 class TowerOfHanoi {
 
 
   def printRules = {
-    println("There 3 rods and n disks. You specify n before game starts." +
-      "The more disks, the harder puzzle gets. At the beginning all disks are at left-side rod." +
-      "Your task is to transfer all of them to the right-side rod." +
-      "Disks are transferred between rods one at a time. " +
-      "At no time may a bigger disk be placed on top of a smaller one.")
+    println("There are 3 rods and n disks. You choose n in range 1-9 to start the game.")
+    println("The more disks, the harder puzzle is. At the beginning all disks are placed at left-side rod.")
+    println("The puzzle is solved once you manage to transfer them all to the right-side rode")
+    println("Disks are transferred between rods one at a time. Bigger disk cannot be placed on top of a smaller one. ")
+    println("Type 'q' at any point to exit. Good Luck!")
   }
 
   def getInput: Int = {
@@ -33,6 +34,12 @@ class TowerOfHanoi {
       // correct level
       else if ((1 to 9).toList.toString.contains(i)) {
         inputOK = true
+      }
+
+      // quit game
+      else if (i == "q") {
+        println("Thanks for playing. Bye, bye.")
+        exit()
       }
 
       // if not number or 'r' -> try again
@@ -70,7 +77,7 @@ class TowerOfHanoi {
     // check if a move can happen
     // 1. rodOut cannot be empty
     // 2. top of rodIn must either be empty or bigger than top of rodOut
-    if (rods(outIndex).nonEmpty && (rods(inIndex).isEmpty || (rods(outIndex)(0) < rods(inIndex)(0))) ) {
+    if (rods(outIndex).nonEmpty && (rods(inIndex).isEmpty || (rods(outIndex)(0) < rods(inIndex)(0)))) {
       true
     }
     else false
@@ -79,17 +86,34 @@ class TowerOfHanoi {
 
   def move(rods: Array[Stack[Int]] /*,rodOut: Int, rodIn: Int*/) = {
 
+    var quit = false
+
     def out(): Int = {
       var s = readLine("Take disks from rod number: ")
+
+      // quit
+      if (s == "q") {
+        println("Thanks for playing. Bye, bye.")
+        exit()
+      }
+
       while (!isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("Out index: ")
       }
+
       s.toInt
     }
 
     def in(): Int = {
       var s = readLine("Put disks on rod number: ")
+
+      // quit
+      if (s == "q") {
+        println("Thanks for playing. Bye, bye.")
+        exit()
+      }
+
       while (!isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("In index: ")
@@ -100,7 +124,7 @@ class TowerOfHanoi {
     var rodOut = out()
     var rodIn = in()
 
-    while(!isMoveValid(rods, rodOut, rodIn)) {
+    while (!isMoveValid(rods, rodOut, rodIn)) {
       println("Invalid move. Try again.")
       rodOut = out()
       rodIn = in()
@@ -108,30 +132,37 @@ class TowerOfHanoi {
 
     rods(rodIn).push(rods(rodOut).pop)
     rods
+
   }
 
   def printState(rods: Array[Stack[Int]]) = {
 
     def centerAlign(item: String, cellWidth: Int) = {
-      def leftSpaces = " " * ((cellWidth-item.length)/2)
-      def rightSpaces = " " * (cellWidth-item.length-leftSpaces.length)
+      def leftSpaces = " " * ((cellWidth - item.length) / 2)
+
+      def rightSpaces = " " * (cellWidth - item.length - leftSpaces.length)
+
       leftSpaces + item + rightSpaces
     }
 
-    // width of each column equals stack's highest element + 2 spaces, but not less than myMin
+    // width of each column equals stack's largest element + 2 spaces, but not less than myMin
     def myMin = 7
+
     def width0: Int = {
-      if (rods(0).nonEmpty) min(myMin, rods(0)(rods(0).size - 1) + 2)
+      if (rods(0).nonEmpty) max(myMin, 2 * rods(0)(rods(0).size - 1) - 1)
       else myMin
     }
+
     def width1: Int = {
-      if (rods(1).nonEmpty) min(myMin, rods(1)(rods(1).size - 1) + 2)
+      if (rods(1).nonEmpty) max(myMin, 2* rods(1)(rods(1).size - 1) - 1)
       else myMin
     }
+
     def width2: Int = {
-      if (rods(2).nonEmpty) min(myMin, rods(2)(rods(2).size - 1) + 2)
+      if (rods(2).nonEmpty) max(myMin, 2* rods(2)(rods(2).size - 1) - 1)
       else myMin
     }
+
     def width = Array(width0, width1, width2)
 
     // height equals highest stack
@@ -146,25 +177,25 @@ class TowerOfHanoi {
 
       // if 1st column part is this high - print value
       if (i <= rods(0).size) {
-        print(centerAlign(rods(0)(rods(0).size - i).toString, width0) + "  ")
+        print(centerAlign("=" * (2 * rods(0)(rods(0).size - i) - 1), width0) + "  ")
       }
-      else print(" " * width0 + "  ")
+      else print(centerAlign(" ", width0) + "  ")
 
       if (i <= rods(1).size) {
-        print(centerAlign(rods(1)(rods(1).size - i).toString, width1) + "  ")
+        print(centerAlign("=" * (2 * rods(1)(rods(1).size - i) - 1), width1) + "  ")
       }
-      else print(" " * width1 + "  ")
+      else print(centerAlign(" ", width1) + "  ")
 
       if (i <= rods(2).size) {
-        print(centerAlign(rods(2)(rods(2).size - i).toString, width2))
+        print(centerAlign("=" * (2 * rods(2)(rods(2).size - i) - 1), width2))
       }
-      else print(" " * width2 + "  ")
+      else print(centerAlign(" ", width2) + "  ")
 
       println()
     }
 
     // print columns's caption
-    println(centerAlign("Rod 0  ", width0) + centerAlign("Rod 1  ", width1) + centerAlign("Rod 2", width2))
+    println(centerAlign("Rod 0", width0) + "  " + centerAlign("Rod 1", width1) + "  " + centerAlign("Rod 2", width2))
 
   }
 
@@ -178,13 +209,17 @@ class TowerOfHanoi {
 
 
   def play() = {
+
     val n = getInput
-    println(s"For n of $n, the minimum number of moves to solve this puzzle is ${minimumMoves(n)}")
+    var moves = 0
+
+
+    println(s"For n of $n, the minimum number of moves to solve this puzzle is ${minimumMoves(n)}\n")
     var rods = initialRods(n)
+
     println("rods are now: ")
     printState(rods)
 
-    var moves = 0
 
     while (!isGameFinished(rods, n)) {
       move(rods)
@@ -193,6 +228,6 @@ class TowerOfHanoi {
       printState(rods)
     }
 
-    println(s"Good job. You solved it with $moves moves!")
+    println(s"Good job. You solved it with $moves move(s)!")
   }
 }
