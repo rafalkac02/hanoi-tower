@@ -84,7 +84,7 @@ class TowerOfHanoi {
   }
 
 
-  def move(rods: Array[Stack[Int]] /*,rodOut: Int, rodIn: Int*/) = {
+  def move(rods: Array[Stack[Int]] /*,rodOut: Int, rodIn: Int*/): Array[Stack[Int]] = {
 
     def out(): Int = {
       var s = readLine("Take disks from rod number: ")
@@ -133,7 +133,7 @@ class TowerOfHanoi {
 
   }
 
-  def printState(rods: Array[Stack[Int]]) = {
+  def printState(rods: Array[Stack[Int]]): Unit = {
 
     def centerAlign(item: String, cellWidth: Int) = {
       def leftSpaces = " " * ((cellWidth - item.length) / 2)
@@ -206,7 +206,7 @@ class TowerOfHanoi {
   }
 
 
-  def play() = {
+  def play(): Unit = {
 
     val n = getInput
     var moves = 0
