@@ -15,6 +15,8 @@ class TowerOfHanoi {
     println("Type 'q' at any point to exit. Good Luck!")
   }
 
+  def quit(s: String): Boolean = s.toLowerCase() == "q"
+
   def getInput: Int = {
 
     // allowed input: numbers from 1 to 9 or char 'r'
@@ -28,25 +30,22 @@ class TowerOfHanoi {
     while (!inputOK) {
       i = input()
 
+      if (i.isEmpty) println("Only accepting numbers 1-9 and 'r'. try again")
       // if 'r' -> print rules and ask for number
-      if (i == "r") printRules
-
+      else if (i == "r") printRules
       // correct level
       else if ((1 to 9).toList.toString.contains(i)) {
         inputOK = true
       }
-
       // quit game
-      else if (i == "q") {
+      else if (quit(i)) {
         println("Thanks for playing. Bye, bye.")
         exit()
       }
-
       // if not number or 'r' -> try again
       else println("Only accepting numbers 1-9 and 'r'. try again")
     }
     i.toInt
-
   }
 
   def minimumMoves(n: Int): Int = (pow(2, n) - 1).toInt
@@ -91,7 +90,7 @@ class TowerOfHanoi {
       var s = readLine("Take disks from rod number: ")
 
       // quit
-      if (s == "q") {
+      if (quit(s)) {
         println("Thanks for playing. Bye, bye.")
         exit()
       }
@@ -99,6 +98,10 @@ class TowerOfHanoi {
       while (s.isEmpty || !isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("Out index: ")
+        if (quit(s)) {
+          println("Thanks for playing. Bye, bye.")
+          exit()
+        }
       }
 
       s.toInt
@@ -108,7 +111,7 @@ class TowerOfHanoi {
       var s = readLine("Put disks on rod number: ")
 
       // quit
-      if (s == "q") {
+      if (quit(s)) {
         println("Thanks for playing. Bye, bye.")
         exit()
       }
@@ -117,6 +120,10 @@ class TowerOfHanoi {
       while (s.isEmpty || !isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("In index: ")
+        if (quit(s)) {
+          println("Thanks for playing. Bye, bye.")
+          exit()
+        }
       }
       s.toInt
     }
