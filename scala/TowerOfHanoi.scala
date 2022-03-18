@@ -60,7 +60,8 @@ class TowerOfHanoi {
   }
 
   def isIndexValid(rod: String): Boolean = {
-    if ((0 to 2).toList.toString.contains(rod)) {
+    if (rod.isEmpty) true
+    else if ((0 to 2).toList.toString.contains(rod)) {
       true
     }
     else false
@@ -95,7 +96,7 @@ class TowerOfHanoi {
         exit()
       }
 
-      while (!isIndexValid(s)) {
+      while (s.isEmpty || !isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("Out index: ")
       }
@@ -112,7 +113,8 @@ class TowerOfHanoi {
         exit()
       }
 
-      while (!isIndexValid(s)) {
+
+      while (s.isEmpty || !isIndexValid(s)) {
         println("Invalid index. Try again.")
         s = readLine("In index: ")
       }
@@ -163,15 +165,15 @@ class TowerOfHanoi {
 
     def width = Array(width0, width1, width2)
 
-    // height equals highest stack
-    def height = max(max(rods(0).size, rods(1).size), rods(2).size)
+    // height equals number of all disks
+    // if disks are divided into multiple rods
+    //  - leave space over them to give player impression that he can put disks at the top
+    def height = rods(0).size + rods(1).size + rods(2).size
 
     for (i <- height to 1 by -1) {
 
       // print row:
-      // print 1st column part
-      // print 2nd column part
-      // print 3rd column part
+      // 1st column part - 2nd column - 3rd column - new line
 
       // if 1st column part is this high - print value
       if (i <= rods(0).size) {
@@ -211,18 +213,14 @@ class TowerOfHanoi {
     val n = getInput
     var moves = 0
 
-
-    println(s"For n of $n, the minimum number of moves to solve this puzzle is ${minimumMoves(n)}\n")
+    println(s"For n of $n, the minimum number of moves to solve this puzzle is ${minimumMoves(n)}.")
     var rods = initialRods(n)
 
-    println("rods are now: ")
     printState(rods)
-
 
     while (!isGameFinished(rods, n)) {
       move(rods)
       moves += 1
-      println("rods are now: ")
       printState(rods)
     }
 
